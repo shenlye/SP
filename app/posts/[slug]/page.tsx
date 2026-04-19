@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getPosts } from "@/app/lib/posts";
@@ -41,38 +42,75 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   const { default: Post } = await import(`@/content/posts/${slug}.mdx`);
+  const postMeta = (
+    <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] text-muted">
+      <span className="border border-border px-2 py-1 text-foreground">
+        {post.category}
+      </span>
+      <time dateTime={post.dateTime}>{post.date}</time>
+    </div>
+  );
+
+  const postHeading = (
+    <>
+      {postMeta}
+      <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.05em] sm:text-4xl md:text-5xl">
+        {post.title}
+      </h1>
+
+      <p className="mt-4 max-w-2xl text-base leading-8 text-muted sm:text-lg">
+        {post.description}
+      </p>
+    </>
+  );
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto w-full max-w-3xl px-6 py-12 sm:px-8 sm:py-16">
+      <div className="mx-auto w-full max-w-5xl px-6 pt-12 sm:px-8 sm:pt-16">
         <Link
           href="/posts"
           className="font-mono text-xs text-muted transition-colors duration-200 hover:text-foreground"
         >
           Back to posts
         </Link>
+      </div>
 
-        <header className="mt-8 border-b border-border pb-8">
-          <div className="flex flex-wrap items-center gap-3 font-mono text-[11px]  text-muted">
-            <span className="border border-border px-2 py-1 text-foreground ">
-              {post.category}
-            </span>
-            <time dateTime={post.dateTime}>{post.date}</time>
+      {post.coverImage ? (
+        <header className="relative mt-8 w-full overflow-hidden border-y border-border">
+          <div className="relative aspect-21/9 w-full min-h-[50svh] sm:min-h-80">
+            <Image
+              src={post.coverImage}
+              alt={post.coverImageAlt ?? post.title}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+
+            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/15 to-transparent" />
+
+            <div className="absolute inset-x-0 bottom-0">
+              <div className="mx-auto w-full max-w-5xl px-6 pb-4 sm:px-8 sm:pb-8">
+                <div className="max-w-3xl bg-background/88 p-4 backdrop-blur-sm sm:p-6">
+                  {postHeading}
+                </div>
+              </div>
+            </div>
           </div>
-
-          <h1 className="mt-5 text-3xl sm:text-4xl font-semibold leading-tight tracking-[-0.05em]">
-            {post.title}
-          </h1>
-
-          <p className="mt-4 max-w-2xl text-base leading-8 text-muted sm:text-lg">
-            {post.description}
-          </p>
         </header>
+      ) : (
+        <div className="mx-auto w-full max-w-5xl px-6 pt-8 sm:px-8">
+          <header className="border-b border-border pb-8">
+            {postHeading}
+          </header>
+        </div>
+      )}
 
-        <div className="mt-10">
+      <article className="mx-auto w-full max-w-5xl px-6 pb-12 pt-10 sm:px-8 sm:pb-16">
+        <div className="mx-auto w-full max-w-3xl">
           <Post />
         </div>
-      </div>
+      </article>
     </main>
   );
 }
