@@ -1,38 +1,45 @@
-import Link from "next/link";
-import { ThemeToggle } from "./components/theme-toggle";
+import { ArticleCard } from "./components/article-card";
+import { getPosts } from "./lib/posts";
 
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Posts", href: "/posts" },
-  { label: "Friends", href: "/friends" },
-];
+export default async function Home() {
+  const posts = await getPosts();
+  const featuredPost = posts[0];
 
-export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border bg-surface">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-5 sm:px-8">
-          <Link href="/" className="text-lg font-semibold text-foreground">
-            SavePoint
-          </Link>
+      <main className="relative overflow-hidden">
+        <div className="absolute inset-0 dark:bg-[radial-gradient(circle_at_20%_25%,rgba(168,85,247,0.18),transparent_30%)]" />
 
-          <div className="flex items-center gap-4 sm:gap-6">
-            <nav aria-label="Primary" className="flex items-center gap-6 sm:gap-8">
-              {navItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="text-md font-medium tracking-wide text-muted transition-colors duration-200 hover:text-foreground"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+        <section className="relative mx-auto flex min-h-[calc(100vh-73px)] w-full max-w-5xl items-start px-6 pt-12 pb-16 sm:px-8 sm:pt-16 sm:pb-20">
+          <div className="w-full max-w-5xl">
+            <p className="mb-4 text-sm font-medium tracking-[0.08em] text-muted uppercase sm:text-base">
+              You&apos;re reading
+            </p>
 
-            <ThemeToggle />
+            <h1 className="font-display max-w-3xl text-2xl leading-[1.15] text-foreground sm:text-4xl md:text-[3.25rem]">
+              Save Point
+            </h1>
+
+            <p className="mt-3 text-lg font-semibold text-foreground sm:text-xl">
+              Personal notes on code, tools, and quiet internet things.
+            </p>
+
+            <div className="mt-7 max-w-5xl">
+              <h2 className="text-xl font-semibold leading-tight text-foreground sm:text-3xl">
+                Latest: Building a blog that stays simple, readable, and easy to maintain
+              </h2>
+
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted sm:text-base sm:leading-8">
+                I want this homepage to stay calm and readable, but still leave
+                room for a few playful UI experiments. This featured card is the
+                first one.
+              </p>
+
+              {featuredPost ? <ArticleCard {...featuredPost} className="mt-7" /> : null}
+            </div>
           </div>
-        </div>
-      </header>
+        </section>
+      </main>
     </div>
   );
 }
