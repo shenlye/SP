@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import clsx from "clsx";
+import { Button } from "./button";
 import type { PostSummary } from "@/app/lib/posts";
 
 type ArticleCardProps = PostSummary & {
@@ -20,20 +20,18 @@ export function ArticleCard({
   className,
 }: ArticleCardProps) {
   return (
-    <Link
+    <Button
       href={`/posts/${slug}`}
-      className={clsx(
-        "group relative block w-full border-2 border-black bg-surface transition-colors duration-200 hover:border-white",
-        className,
-      )}
+      wrapperClassName={clsx("block w-full", className)}
+      baseClassName="bg-border/80"
+      baseOverlayClassName="bg-[linear-gradient(90deg,#6FFDC4,#FFFA6D)] opacity-0 transition-opacity duration-200 group-hover/pressable:opacity-100"
+      className="group block w-full border border-border/80 hover:border-foreground/80 bg-surface text-left transition-colors duration-200"
     >
-      <div className="pointer-events-none absolute inset-0 translate-x-1 translate-y-1  bg-[linear-gradient(90deg,#6FFDC4,#FFFA6D)] transition-colors duration-200 " />
-
-      <div className="relative z-10 grid grid-cols-1 overflow-hidden bg-surface md:grid-cols-[minmax(0,1fr)_24rem]">
+      <div className="grid grid-cols-1 overflow-hidden bg-surface md:grid-cols-[minmax(0,1fr)_24rem]">
         <div className="order-2 min-w-0 p-4 md:order-1 md:p-5">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] text-muted sm:text-[11px]">
-              <span className="border border-black px-2 py-1 text-foreground transition-colors duration-200 group-hover:border-white">
+              <span className="border border-border/80 px-2 py-1 text-foreground">
                 {category}
               </span>
               <time dateTime={dateTime}>{date}</time>
@@ -57,9 +55,9 @@ export function ArticleCard({
           </div>
         </div>
 
-        <div className="order-1 border-b-2 border-black bg-black/3 transition-colors duration-200 group-hover:border-white dark:bg-white/4 md:order-2 md:border-b-0 md:border-l-2">
+        <div className="order-1 border-b border-border/80 bg-black/3 transition-colors duration-200 dark:bg-white/4 md:order-2 md:border-b-0 md:border-l">
           <div className="aspect-video p-4 md:h-full md:min-h-50 md:aspect-auto">
-            <div className="relative h-full w-full overflow-hidden border border-black/15 bg-background/35 transition-colors duration-200 group-hover:border-white/55 dark:border-white/20 dark:bg-white/3">
+            <div className="relative h-full w-full overflow-hidden border border-border/80 bg-background/35 transition-colors duration-200 dark:bg-white/3">
               {coverImage ? (
                 <Image
                   src={coverImage}
@@ -73,6 +71,6 @@ export function ArticleCard({
           </div>
         </div>
       </div>
-    </Link>
+    </Button>
   );
 }

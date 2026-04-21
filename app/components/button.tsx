@@ -6,7 +6,10 @@ const shellClassName =
   "group/pressable relative isolate";
 
 const baseLayerClassName =
-  "pointer-events-none absolute inset-0 translate-x-0.5 translate-y-0.5 rounded-none transition-colors duration-150";
+  "pointer-events-none absolute inset-0 translate-x-0.5 translate-y-0.5 overflow-hidden rounded-none transition-colors duration-150";
+
+const baseLayerOverlayClassName =
+  "absolute inset-0 transition-opacity duration-150";
 
 const interactiveClassName =
   "relative z-10 select-none transition-[background-color,color,border-color] duration-150 active:translate-x-[2px] active:translate-y-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -16,12 +19,14 @@ const buttonElementClassName =
 
 type ButtonFrameProps = {
   baseClassName?: string;
+  baseOverlayClassName?: string;
   wrapperClassName?: string;
   children: ReactNode;
 };
 
 type ButtonBaseProps = {
   baseClassName?: string;
+  baseOverlayClassName?: string;
   wrapperClassName?: string;
   children: ReactNode;
   className?: string;
@@ -43,23 +48,33 @@ function ButtonFrame({
   children,
   wrapperClassName,
   baseClassName,
+  baseOverlayClassName,
 }: ButtonFrameProps) {
   return (
-    <span
+    <div
       className={clsx(
         shellClassName,
         wrapperClassName,
       )}
     >
-      <span
+      <div
         aria-hidden="true"
         className={clsx(
           baseLayerClassName,
           baseClassName,
         )}
-      />
+      >
+        {baseOverlayClassName ? (
+          <div
+            className={clsx(
+              baseLayerOverlayClassName,
+              baseOverlayClassName,
+            )}
+          />
+        ) : null}
+      </div>
       {children}
-    </span>
+    </div>
   );
 }
 
@@ -74,6 +89,7 @@ export function Button(props: ButtonProps) {
       className,
       wrapperClassName,
       baseClassName,
+      baseOverlayClassName,
       href,
       ...linkProps
     } = props;
@@ -82,6 +98,7 @@ export function Button(props: ButtonProps) {
       <ButtonFrame
         wrapperClassName={wrapperClassName}
         baseClassName={baseClassName}
+        baseOverlayClassName={baseOverlayClassName}
       >
         <Link
           {...linkProps}
@@ -102,6 +119,7 @@ export function Button(props: ButtonProps) {
     className,
     wrapperClassName,
     baseClassName,
+    baseOverlayClassName,
     type = "button",
     ...buttonProps
   } = props;
@@ -110,6 +128,7 @@ export function Button(props: ButtonProps) {
     <ButtonFrame
       wrapperClassName={wrapperClassName}
       baseClassName={baseClassName}
+      baseOverlayClassName={baseOverlayClassName}
     >
       <button
         {...buttonProps}
