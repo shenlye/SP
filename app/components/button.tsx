@@ -12,7 +12,7 @@ const baseLayerOverlayClassName =
   "absolute inset-0 transition-opacity duration-150";
 
 const interactiveClassName =
-  "relative z-10 select-none transition-[background-color,color,border-color] duration-150 active:translate-x-[2px] active:translate-y-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "relative z-10 select-none transition-[background-color,color,border-color,box-shadow] duration-150 dark:[box-shadow:inset_0_1px_0_0_rgb(255_255_255_/_0.05),inset_1px_0_0_0_rgb(255_255_255_/_0.03),0_1px_0_0_rgb(0_0_0_/_0.18)] active:translate-x-[2px] active:translate-y-[2px] active:[box-shadow:inset_1px_1px_0_0_color-mix(in_oklab,var(--color-foreground)_22%,transparent)] dark:active:[box-shadow:inset_1px_1px_0_0_rgb(0_0_0_/_0.34),inset_-1px_-1px_0_0_rgb(255_255_255_/_0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 const buttonElementClassName =
   "inline-flex items-center justify-center disabled:pointer-events-none disabled:opacity-50";
