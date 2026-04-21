@@ -19,7 +19,7 @@ function clamp(value: number, min: number, max: number) {
 
 export function CityParallaxPage({
   title = "Posts",
-  eyebrow = "Archive",
+  eyebrow = "",
   description = "Long-form notes about UI experiments, implementation details, and the small choices worth finding again later.",
   meta,
 }: {

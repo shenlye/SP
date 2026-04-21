@@ -1,9 +1,4 @@
-import { ArticleCard } from "./components/article-card";
-import { getPosts } from "./lib/posts";
-
 export default async function Home() {
-  const posts = await getPosts();
-  const featuredPost = posts[0];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -34,8 +29,6 @@ export default async function Home() {
                 room for a few playful UI experiments. This featured card is the
                 first one.
               </p>
-
-              {featuredPost ? <ArticleCard {...featuredPost} className="mt-7" /> : null}
             </div>
           </div>
         </section>

@@ -29,12 +29,12 @@ function BrandLink({ onClick }: { onClick?: () => void }) {
         />
       </span>
 
-      <span className="flex min-w-0 flex-col gap-1">
-        <span className="font-display text-[1rem] leading-none text-foreground">
+      <span className="flex min-w-0 flex-col">
+        <span className="font-display text-2xl leading-none text-foreground">
           SavePoint
         </span>
-        <span className="font-medium font-mono text-xs uppercase tracking-[0.2em] text-muted">
-          Personal Blog
+        <span className="font-medium font-display text-sm uppercase tracking-[0.2em] text-muted">
+          by Shenley
         </span>
       </span>
     </Link>

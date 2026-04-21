@@ -23,7 +23,7 @@
   --color-brand-strong: var(--ui-brand-strong);
   --font-sans: var(--font-inter), var(--font-noto-sans-sc);
   --font-mono: var(--font-jetbrains-mono);
-  --font-display: var(--font-press-start-2p);
+  --font-display: var(--font-vt323);
 }
 
 .dark {

@@ -3,7 +3,7 @@ import {
   Inter,
   JetBrains_Mono,
   Noto_Sans_SC,
-  Press_Start_2P,
+  VT323,
 } from "next/font/google";
 import { SiteHeader } from "./components/site-header";
 import { ThemeProvider } from "next-themes";
@@ -27,8 +27,8 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const pressStart2P = Press_Start_2P({
-  variable: "--font-press-start-2p",
+const vt323 = VT323({
+  variable: "--font-vt323",
   subsets: ["latin"],
   weight: "400",
   display: "swap",
@@ -47,7 +47,7 @@ export default function RootLayout({
   return (
     <html
       lang="zh-CN"
-      className={`${inter.variable} ${notoSansSC.variable} ${jetbrainsMono.variable} ${pressStart2P.variable} h-full antialiased`}
+      className={`${inter.variable} ${notoSansSC.variable} ${jetbrainsMono.variable} ${vt323.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
