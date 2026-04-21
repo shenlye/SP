@@ -36,7 +36,7 @@ const components: MDXComponents = {
   h1: ({ className, ...props }) => (
     <h1
       className={clsx(
-        "text-3xl sm:text-4xl font-semibold leading-tight tracking-[-0.04em] text-foreground",
+        "text-3xl font-semibold leading-tight tracking-[-0.04em] text-foreground sm:text-4xl",
         className,
       )}
       {...props}
@@ -45,7 +45,7 @@ const components: MDXComponents = {
   h2: ({ className, ...props }) => (
     <h2
       className={clsx(
-        "mt-12 text-2xl font-semibold leading-tight text-foreground sm:text-3xl",
+        "mt-10 text-[1.4rem] font-semibold leading-tight tracking-[-0.03em] text-foreground sm:text-[1.7rem]",
         className,
       )}
       {...props}
@@ -54,7 +54,7 @@ const components: MDXComponents = {
   h3: ({ className, ...props }) => (
     <h3
       className={clsx(
-        "mt-10 text-xl font-semibold leading-tight text-foreground sm:text-2xl",
+        "mt-8 text-lg font-semibold leading-tight tracking-[-0.03em] text-foreground sm:text-[1.35rem]",
         className,
       )}
       {...props}
@@ -63,7 +63,7 @@ const components: MDXComponents = {
   p: ({ className, ...props }) => (
     <p
       className={clsx(
-        "mt-5 text-base leading-8 text-muted sm:text-[17px]",
+        "mt-4 text-sm leading-7 text-foreground-soft sm:text-base",
         className,
       )}
       {...props}
@@ -73,7 +73,7 @@ const components: MDXComponents = {
   ul: ({ className, ...props }) => (
     <ul
       className={clsx(
-        "mt-5 list-disc space-y-3 pl-6 text-base leading-8 text-muted marker:text-brand sm:text-[17px]",
+        "mt-4 list-disc space-y-2.5 pl-5 text-sm leading-7 text-foreground-soft marker:text-muted sm:text-base",
         className,
       )}
       {...props}
@@ -82,7 +82,7 @@ const components: MDXComponents = {
   ol: ({ className, ...props }) => (
     <ol
       className={clsx(
-        "mt-5 list-decimal space-y-3 pl-6 text-base leading-8 text-muted marker:text-brand sm:text-[17px]",
+        "mt-4 list-decimal space-y-2.5 pl-5 text-sm leading-7 text-foreground-soft marker:text-muted sm:text-base",
         className,
       )}
       {...props}
@@ -94,14 +94,14 @@ const components: MDXComponents = {
   blockquote: ({ className, ...props }) => (
     <blockquote
       className={clsx(
-        "mt-8 border-l-4 border-brand pl-4 text-base leading-8 text-foreground sm:text-[17px]",
+        "mt-6 border-l-2 border-border pl-4 text-sm leading-7 text-muted sm:text-base",
         className,
       )}
       {...props}
     />
   ),
   hr: ({ className, ...props }) => (
-    <hr className={clsx("my-10 border-border", className)} {...props} />
+    <hr className={clsx("my-8 border-border", className)} {...props} />
   ),
   pre: ({ className, ...props }) => (
     <pre className={clsx("", className)} {...props} />
@@ -111,7 +111,7 @@ const components: MDXComponents = {
       className={clsx(
         className
           ? "font-mono text-[0.92em]"
-          : "rounded bg-background px-1.5 py-0.5 font-mono text-[0.92em] text-foreground",
+          : "rounded bg-brand-soft/60 px-1.5 py-0.5 font-mono text-[0.92em] text-foreground",
         className,
       )}
       {...props}

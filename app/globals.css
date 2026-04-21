@@ -4,6 +4,7 @@
   --ui-bg: #f8f8f6;
   --ui-surface: #ffffff;
   --ui-text: #18181b;
+  --ui-text-soft: #3f3f46;
   --ui-text-muted: #71717a;
   --ui-border: #e4e4e7;
   --ui-brand: #4f7cff;
@@ -16,6 +17,7 @@
   --color-background: var(--ui-bg);
   --color-surface: var(--ui-surface);
   --color-foreground: var(--ui-text);
+  --color-foreground-soft: var(--ui-text-soft);
   --color-muted: var(--ui-text-muted);
   --color-border: var(--ui-border);
   --color-brand: var(--ui-brand);
@@ -30,6 +32,7 @@
   --ui-bg: #18191b;
   --ui-surface: #111113;
   --ui-text: #ededed;
+  --ui-text-soft: #d4d4d8;
   --ui-text-muted: #a1a1aa;
   --ui-border: #27272a;
   --ui-brand: #7da3ff;

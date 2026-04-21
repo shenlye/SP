@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getPosts } from "@/app/lib/posts";
 
@@ -43,70 +42,71 @@ export default async function PostPage({ params }: PostPageProps) {
 
   const { default: Post } = await import(`@/content/posts/${slug}.mdx`);
   const postMeta = (
-    <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] text-muted">
-      <span className="border border-border px-2 py-1 text-foreground">
+    <div className="flex flex-wrap items-center gap-2 text-[10px] text-muted sm:text-[11px]">
+      <span className="px-2 py-0.5 text-foreground">
         {post.category}
       </span>
-      <time dateTime={post.dateTime}>{post.date}</time>
+      <time dateTime={post.dateTime} className="px-1 py-0.5">
+        {post.date}
+      </time>
     </div>
-  );
-
-  const postHeading = (
-    <>
-      {postMeta}
-      <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.05em] sm:text-4xl md:text-5xl">
-        {post.title}
-      </h1>
-
-      <p className="mt-4 max-w-2xl text-base leading-8 text-muted sm:text-lg">
-        {post.description}
-      </p>
-    </>
   );
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto w-full max-w-5xl px-6 pt-12 sm:px-8 sm:pt-16">
-        <Link
-          href="/posts"
-          className="font-mono text-xs text-muted transition-colors duration-200 hover:text-foreground"
-        >
-          Back to posts
-        </Link>
-      </div>
-
       {post.coverImage ? (
-        <header className="relative mt-8 w-full overflow-hidden border-y border-border">
-          <div className="relative aspect-21/9 w-full min-h-[50svh] sm:min-h-80">
-            <Image
-              src={post.coverImage}
-              alt={post.coverImageAlt ?? post.title}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
+        <div className="mx-auto w-full max-w-5xl px-6 pt-6 sm:px-8 sm:pt-8">
+          <header className="mx-auto w-full max-w-3xl">
+            <div className="relative overflow-hidden border border-border bg-surface">
+              <div className="relative aspect-16/10 max-h-84 w-full sm:aspect-video sm:max-h-96">
+                <Image
+                  src={post.coverImage}
+                  alt={post.coverImageAlt ?? post.title}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 48rem, 100vw"
+                  className="object-cover"
+                />
 
-            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/15 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/68 via-black/18 to-transparent" />
 
-            <div className="absolute inset-x-0 bottom-0">
-              <div className="mx-auto w-full max-w-5xl px-6 pb-4 sm:px-8 sm:pb-8">
-                <div className="max-w-3xl bg-background/88 p-4 backdrop-blur-sm sm:p-6">
-                  {postHeading}
+                <div className="absolute inset-x-0 top-0 p-3">
+                  <div className="[&_span]:text-white [&_time]:text-white/88 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]">
+                    {postMeta}
+                  </div>
+                </div>
+
+                <div className="absolute inset-x-0 bottom-0 py-2 px-4">
+                  <h1
+                    className="max-w-2xl text-3xl font-semibold leading-tight tracking-[-0.05em] text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.55)] sm:text-4xl md:text-5xl"
+                  >
+                    {post.title}
+                  </h1>
                 </div>
               </div>
             </div>
-          </div>
-        </header>
+
+            <p className="mt-3 leading-7 text-muted text-md sm:leading-8">
+              {post.description}
+            </p>
+          </header>
+        </div>
       ) : (
-        <div className="mx-auto w-full max-w-5xl px-6 pt-8 sm:px-8">
-          <header className="border-b border-border pb-8">
-            {postHeading}
+        <div className="mx-auto w-full max-w-5xl px-6 pt-6 sm:px-8 sm:pt-8">
+          <header className="mx-auto max-w-3xl border-b border-border pb-7">
+            {postMeta}
+            <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-[-0.05em] sm:text-4xl md:text-5xl">
+              {post.title}
+            </h1>
+
+            <p className="mt-3 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8">
+              {post.description}
+            </p>
           </header>
         </div>
       )}
 
-      <article className="mx-auto w-full max-w-5xl px-6 pb-12 pt-10 sm:px-8 sm:pb-16">
+      <article className="mx-auto w-full max-w-5xl px-6 pb-12 pt-8 sm:px-8 sm:pb-16 sm:pt-9">
         <div className="mx-auto w-full max-w-3xl">
           <Post />
         </div>
