@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getPostBySlug, getPosts } from "@/app/lib/posts";
+import { formatPostDate, getPostBySlug, getPosts } from "@/app/lib/posts";
 
 type PostPageProps = {
   params: Promise<{ slug: string }>;
@@ -46,22 +46,27 @@ export default async function PostPage({ params }: PostPageProps) {
       <span className="px-2 py-0.5 text-foreground">
         {post.category}
       </span>
-      <time dateTime={post.dateTime} className="px-1 py-0.5">
-        {post.date}
+      <time dateTime={post.publishedAt} className="px-1 py-0.5">
+        {formatPostDate(post.publishedAt)}
       </time>
+      {post.updatedAt ? (
+        <time dateTime={post.updatedAt} className="px-1 py-0.5">
+          Updated {formatPostDate(post.updatedAt)}
+        </time>
+      ) : null}
     </div>
   );
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      {post.coverImage ? (
+      {post.cover ? (
         <div className="mx-auto w-full max-w-5xl sm:px-8 sm:pt-8">
           <header className="mx-auto w-full max-w-3xl">
             <div className="relative overflow-hidden border border-border bg-surface">
               <div className="relative aspect-16/10 max-h-84 w-full sm:aspect-video sm:max-h-96">
                 <Image
-                  src={post.coverImage}
-                  alt={post.coverImageAlt ?? post.title}
+                  src={post.cover}
+                  alt=""
                   fill
                   priority
                   sizes="(min-width: 1024px) 48rem, 100vw"

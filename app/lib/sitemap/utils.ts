@@ -63,7 +63,7 @@ export function createPostSitemapEntries(posts: PostSummary[]): SitemapEntry[] {
   return posts.map(
     (post): SitemapEntry => ({
       url: createUrl(`/posts/${post.slug}`),
-      lastModified: post.dateTime,
+      lastModified: post.updatedAt ?? post.publishedAt,
       ...POST_ROUTE_DEFAULTS,
     }),
   );

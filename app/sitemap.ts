@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getPosts } from "@/app/lib/posts";
+import { getPostLastModified, getPosts } from "@/app/lib/posts";
 import { getStaticRoutes } from "@/app/lib/sitemap/scanner";
 import {
   createPostSitemapEntries,
@@ -11,7 +11,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getPosts(),
     getStaticRoutes(),
   ]);
-  const latestPostDate = posts[0]?.dateTime;
+  const latestPostDate = posts.reduce<string | undefined>((latestDate, post) => {
+    const postDate = getPostLastModified(post);
+
+    if (!latestDate) {
+      return postDate;
+    }
+
+    return new Date(postDate) > new Date(latestDate) ? postDate : latestDate;
+  }, undefined);
 
   const pageEntries = createStaticSitemapEntries(staticRoutes, latestPostDate);
   const postEntries = createPostSitemapEntries(posts);

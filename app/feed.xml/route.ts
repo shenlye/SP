@@ -24,8 +24,8 @@ export async function GET() {
             <title>${escapeXml(post.title)}</title>
             <link>${siteConfig.url}/posts/${post.slug}</link>
             <guid>${siteConfig.url}/posts/${post.slug}</guid>
-            <pubDate>${new Date(post.dateTime).toUTCString()}</pubDate>
-            <description>${toCdata(post.excerpt)}</description>
+            <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
+            <description>${toCdata(post.description)}</description>
         </item>
     `,
     )

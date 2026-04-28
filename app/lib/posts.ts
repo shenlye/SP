@@ -6,13 +6,11 @@ export type PostSummary = {
   slug: string;
   title: string;
   description: string;
-  excerpt: string;
-  date: string;
-  dateTime: string;
+  publishedAt: string;
+  updatedAt?: string;
   category: string;
   tags: string[];
-  coverImage?: string;
-  coverImageAlt?: string;
+  cover?: string;
 };
 
 type PostModule = {
@@ -20,6 +18,21 @@ type PostModule = {
 };
 
 const postsDirectory = path.join(process.cwd(), "content", "posts");
+
+const postDateFormatter = new Intl.DateTimeFormat("zh-CN", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+export function formatPostDate(date: string) {
+  return postDateFormatter.format(new Date(date));
+}
+
+export function getPostLastModified(post: PostSummary) {
+  return post.updatedAt ?? post.publishedAt;
+}
 
 async function importPostModule(slug: string): Promise<PostModule> {
   return import(`@/content/posts/${slug}.mdx`) as Promise<PostModule>;
@@ -42,7 +55,7 @@ export const getPosts = cache(async (): Promise<PostSummary[]> => {
     }),
   );
 
-  return posts.sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+  return posts.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 });
 
 export const getPostBySlug = cache(async (slug: string) => {
