@@ -55,7 +55,7 @@ export default async function PostPage({ params }: PostPageProps) {
   return (
     <main className="min-h-screen bg-background text-foreground">
       {post.coverImage ? (
-        <div className="mx-auto w-full max-w-5xl px-6 pt-6 sm:px-8 sm:pt-8">
+        <div className="mx-auto w-full max-w-5xl sm:px-8 sm:pt-8">
           <header className="mx-auto w-full max-w-3xl">
             <div className="relative overflow-hidden border border-border bg-surface">
               <div className="relative aspect-16/10 max-h-84 w-full sm:aspect-video sm:max-h-96">
@@ -86,9 +86,6 @@ export default async function PostPage({ params }: PostPageProps) {
               </div>
             </div>
 
-            <p className="mt-3 leading-7 text-muted text-md sm:leading-8">
-              {post.description}
-            </p>
           </header>
         </div>
       ) : (
@@ -98,10 +95,6 @@ export default async function PostPage({ params }: PostPageProps) {
             <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-[-0.05em] sm:text-4xl md:text-5xl">
               {post.title}
             </h1>
-
-            <p className="mt-3 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8">
-              {post.description}
-            </p>
           </header>
         </div>
       )}

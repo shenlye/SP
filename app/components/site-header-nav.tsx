@@ -1,17 +1,11 @@
 "use client";
 
+import { siteRoutes } from "@/app/config";
 import { Button } from "./button";
 
-export type SiteNavItem = {
-  label: string;
-  href: string;
-};
-
-export const siteNavItems: SiteNavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "Posts", href: "/posts" },
-  { label: "Links", href: "/Links" },
-];
+export const siteNavItems = siteRoutes
+  .filter((route) => route.showInNav)
+  .map(({ label, href }) => ({ label, href }));
 
 function isNavItemActive(pathname: string, href: string) {
   const normalizedPathname = pathname.toLowerCase();
