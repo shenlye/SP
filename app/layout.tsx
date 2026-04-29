@@ -5,6 +5,7 @@ import {
   Noto_Sans_SC,
   VT323,
 } from "next/font/google";
+import { SiteFooter } from "./components/site-footer";
 import { SiteHeader } from "./components/site-header";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
@@ -68,7 +69,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SiteHeader />
-          {children}
+          <div className="flex-1">{children}</div>
+          <SiteFooter />
         </ThemeProvider>
       </body>
     </html>

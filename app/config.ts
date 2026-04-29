@@ -1,6 +1,4 @@
-import type { MetadataRoute } from "next";
-
-type SitemapEntry = MetadataRoute.Sitemap[number];
+import type { SitemapEntryDefaults } from "@/app/lib/sitemap/config";
 
 // 站点配置
 export const siteConfig = {
@@ -14,7 +12,7 @@ export type SiteRoute = {
   label: string;
   href: "/" | `/${string}`;
   showInNav?: boolean;
-  sitemap?: Pick<SitemapEntry, "changeFrequency" | "priority"> & {
+  sitemap?: SitemapEntryDefaults & {
     // 是否根据最新文章更新时间更新此路由的 lastModified
     updatedByPosts?: boolean;
   };

@@ -71,7 +71,7 @@ export function ArticleCard({
                     icon="solar:refresh-bold"
                     className="h-3 w-3 shrink-0 text-foreground/80"
                   />
-                  Updated {formatPostDate(updatedAt)}
+                  更新于：{formatPostDate(updatedAt)}
                 </time>
               ) : null}
             </div>
