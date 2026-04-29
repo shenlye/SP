@@ -3,7 +3,7 @@ import type { SitemapEntryDefaults } from "@/app/lib/sitemap/config";
 // 站点配置
 export const siteConfig = {
   title: "Save Point",
-  description: "A simple save point system for your game.",
+  description: "A personal blog about programming, technology, and life.",
   url: "https://toy.shenley.cn",
   locale: "zh-CN",
 };

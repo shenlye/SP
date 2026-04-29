@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { siteConfig } from "@/app/config";
 import { Button } from "./button";
 import {
   useCloseOnEscape,
@@ -31,10 +32,10 @@ function BrandLink({ onClick }: { onClick?: () => void }) {
 
       <span className="flex min-w-0 flex-col">
         <span className="font-display text-2xl leading-none text-foreground">
-          SavePoint
+          {siteConfig.title}
         </span>
         <span className="font-medium font-display text-sm uppercase tracking-[0.2em] text-muted">
-          by Shenley
+          Frontend Developer
         </span>
       </span>
     </Link>
