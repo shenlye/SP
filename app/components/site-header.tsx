@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { siteConfig } from "@/app/config";
 import { Button } from "./button";
+import MusicPlayer from "./miniplayer";
 import {
   useCloseOnEscape,
   useHeaderVisibility,
@@ -57,7 +58,8 @@ export function SiteHeader() {
           isVisible || isMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-3 sm:px-8">
+        <div className="mx-auto relative flex w-full max-w-5xl items-center justify-between px-6 py-3 sm:px-8">
+          <MusicPlayer className="absolute top-full right-6 mt-3" />
           <BrandLink />
 
           <div className="hidden items-center gap-4 sm:flex sm:gap-6">
