@@ -5,27 +5,59 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "../lib/cn";
 
-const bar = [5, 7, 10, 6, 4];
-
-function Bars() {
+function Bars({ playing }: { playing: boolean }) {
+  const bar = [5, 7, 10, 6, 4];
   return (
     <div className="flex items-center gap-0.5">
       {bar.map((height, index) => (
         <motion.span
           key={index}
           className="w-0.5 bg-brand rounded-sm"
-          style={{ height }}
+          style={{ height: 3 }}
           animate={{
-            height: [height, height + 7, height],
+            height: playing ? [height, height + 7, height] : 3,
           }}
           transition={{
             duration: 0.7,
-            repeat: Infinity,
-            delay: index * 0.15,
+            repeat: playing ? Infinity : 0,
+            delay: playing ? index * 0.15 : 0,
             ease: "easeInOut",
           }}
         />
       ))}
+    </div>
+  );
+}
+
+function GlowLights() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-14 overflow-hidden"
+    >
+      <motion.span
+        className="absolute top-3 left-0 h-32 w-32 rounded-full bg-radial from-sky-400/45 via-cyan-300/20 to-transparent blur-sm"
+        animate={{ x: [-50, -30, -20, -50] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.span
+        className="absolute top-5 left-20 h-24 w-24 rounded-full bg-radial from-fuchsia-400/35 via-pink-300/15 to-transparent blur-sm"
+        animate={{ x: [0, -30, 18, 0] }}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.span
+        className="absolute top-2 right-0 h-32 w-32 rounded-full bg-radial from-amber-300/35 via-orange-300/15 to-transparent blur-sm"
+        animate={{ x: [30, 10, 0, 30] }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
     </div>
   );
 }
@@ -38,6 +70,8 @@ export default function MusicPlayer({ className }: { className?: string }) {
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   async function handlePlayPause(event: React.MouseEvent<HTMLButtonElement>) {
     // 阻止事件冒泡
@@ -52,7 +86,6 @@ export default function MusicPlayer({ className }: { className?: string }) {
       audio.pause();
     }
   }
-
 
   useEffect(() => {
     function handleClickOutside(event: PointerEvent) {
@@ -71,6 +104,23 @@ export default function MusicPlayer({ className }: { className?: string }) {
     };
   }, []);
 
+  function formatTime(seconds: number) {
+    if (!Number.isFinite(seconds)) return "00:00";
+
+    const minutes = Math.floor(seconds / 60);
+    const restSeconds = Math.floor(seconds % 60);
+
+    return `${minutes}:${restSeconds.toString().padStart(2, "0")}`;
+  }
+  function handleSeek(event: React.ChangeEvent<HTMLInputElement>) {
+    const nextTime = Number(event.target.value);
+    setCurrentTime(nextTime);
+
+    if (audioRef.current) {
+      audioRef.current.currentTime = nextTime;
+    }
+  }
+
   return (
     <motion.div
       ref={playerRef}
@@ -78,7 +128,7 @@ export default function MusicPlayer({ className }: { className?: string }) {
         isOpen
           ? "w-64 h-32 rounded-xl justify-center items-center"
           : "w-32 h-8 rounded-full justify-between items-center",
-        "origin-center flex bg-gray-800 py-2 px-2  overflow-hidden",
+        "origin-center relative flex bg-surface py-2 px-2 overflow-hidden border-border border",
         className,
       )}
       onAnimationComplete={() => {
@@ -115,14 +165,21 @@ export default function MusicPlayer({ className }: { className?: string }) {
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onEnded={() => setIsPlaying(false)}
+        onLoadedMetadata={(event) => {
+          setDuration(event.currentTarget.duration);
+        }}
+        onTimeUpdate={(event) => {
+          setCurrentTime(event.currentTarget.currentTime);
+        }}
       />
+      {showExpandedContent && <GlowLights />}
       {showCompactContent && (
         <>
           <motion.div
             animate={{ scale: [0.7, 1] }}
             className="size-5 bg-zinc-500 rounded-sm"
           />
-          <Bars />
+          <Bars playing={isPlaying} />
         </>
       )}
       <AnimatePresence>
@@ -131,9 +188,9 @@ export default function MusicPlayer({ className }: { className?: string }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0 } }}
-            className="w-full"
+            className="relative z-10 w-full"
           >
-            <div className="flex flex-col gap-2 w-full h-full p-2">
+            <div className="relative z-10 flex flex-col gap-2 w-full h-full p-2">
               <div className="flex">
                 <div
                   className="size-10 bg-zinc-500 rounded-sm"
@@ -149,12 +206,18 @@ export default function MusicPlayer({ className }: { className?: string }) {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-1 justify-between items-center">
-                <time className="text-[10px]">00:00</time>
-                <div className="h-1 flex-1 bg-white/20 rounded-full">
-                  <div className="h-full w-1/3 bg-brand rounded-full" />
-                </div>
-                <time className="text-[10px]">03:30</time>
+              <div className="flex gap-2 justify-between items-center">
+                <time className="text-[10px]">{formatTime(currentTime)}</time>
+                <input
+                  type="range"
+                  min={0}
+                  max={duration || 0}
+                  step={0.1}
+                  value={currentTime}
+                  onChange={handleSeek}
+                  className="h-1 flex-1"
+                />
+                <time className="text-[10px]">{formatTime(duration)}</time>
               </div>
               <div className="flex items-center justify-center gap-5">
                 <button
