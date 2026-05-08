@@ -1,0 +1,110 @@
+export const metadata = {
+  title: "JavaScript 原型链与 Class",
+  description:
+    "深入浅出地解析 JavaScript 原型链的底层机制。通过对比 HTML 元素继承链、手动实现构造函数以及 Class 语法糖，带你彻底弄懂 prototype、__proto__ 与 this 的指向逻辑。",
+  publishedAt: "2026-05-08",
+  updatedAt: "2026-05-08",
+  category: "Frontend Development",
+  tags: ["JavaScript", "TypeScript", "ES6", "OOP"],
+  cover: "",
+};
+
+当你写下一个 `const a = new Array(1, 2)`，然后尝试运行 `a.hasOwnProperty(0)`，居然并没有报错。
+即使去翻了 Array 的官方文档，你也找不到这个方法。这是为什么？
+
+如果在控制台打印过它，一定会注意到一个 `[[Prototype]]` 的东西。把它展开之后有一大堆属性，像刚刚的例子只要往下展开两层，也就发现了 `hasOwnProperty`。这一切是怎么来的呢？
+
+答案就是**原型链**。
+
+## 链条是怎么连起来的？
+
+举个贴近日常开发的例子，如果你用 `document.querySelector` 获取一个 `div` 元素，TypeScript 会告诉你这是一个 `HTMLDivElement | null` 类型。
+
+如果在 MDN 里查阅 `HTMLDivElement`，你会看到这样一条继承链路：
+`EventTarget` -> `Node` -> `Element` -> `HTMLElement` -> `HTMLDivElement`
+
+而 `EventTarget` 的源头又来自 `Object`。这就是一个链条，代表着父类和子类的继承关系。每一层都能调用它前面父类所拥有的方法，但父类无法调用子类新增的方法（这就好比正方形都是矩形，但不是所有矩形都是正方形）。
+
+比如 `HTMLDivElement` 调用一个 `appendChild`，属性查找会先在实例对象自身上找；如果找不到，再沿着实例的 [[Prototype]] 指向的原型对象继续往上找，`HTMLDivElement.prototype`、`HTMLElement.prototype`、`Element.prototype`、`Node.prototype`。直到最后找到，或者最后为 `null`。
+为什么最后是 `null`？因为官方规定原型链必须有个结束标记。不信你可以试着把 `Array.prototype.__proto__` 设为 `null`，看看你还能不能用 `hasOwnProperty` 了。
+
+关于原型，有两个极其重要但容易混淆的概念补充一下：
+- **`prototype`（原型对象）**：它存的是某一类实例共同拥有的方法。这样做是为了节省内存，而不是给每个新创建的数组或对象都复制一份方法。
+- `__proto__` 是访问对象内部 `[[Prototype]]` 的历史遗留访问器，不推荐在正式代码里直接使用。更推荐使用 `Object.getPrototypeOf()` 和 `Object.setPrototypeOf()` 来操作原型链。
+
+## 动手试一试
+
+```ts
+// 比如我想给 Array 加个静态方法
+Array.sayHello = function() {
+    console.log("Hello from Array!");
+}
+Array.sayHello();
+
+// 甚至可以修改原型，让实例也可以使用，变成实例方法
+Array.prototype.sayHello = function () {
+  console.log("Hello from Array Instance!");
+};
+const a = new Array();
+a.sayHello(); // 成功执行！
+```
+以上代码在 TS 里会飘红报错，但是不影响你实际运行。不过，直接修改原型虽然简单粗暴，但在实际开发中是极度不推荐直接修改原生对象的。
+
+## 手搓一个构造函数玩玩
+
+**插播一个关键知识点**
+要搞懂接下来的内容，得先清楚**箭头函数和普通函数的区别**：
+- 普通函数的 `this` 是动态的，谁调用这个函数，`this` 就指向谁。
+- 箭头函数没有自己的 `this`，它会直接捕获最近一层非箭头函数的 `this`。
+
+带着这个铺垫，来看看以前没有 Class 的时候是怎么写面向对象的：
+
+```ts
+function Person(name) {
+  this.name = name;
+}
+
+Person.prototype.sayHello = function () {
+  console.log("Hi, I'm " + this.name);
+};
+
+const me = new Person("jack");
+me.sayHello();
+```
+
+当我们执行 `const me = new Person("jack");` 的时候，内存中开辟了一块新空间。然后，`me` 的 `__proto__` 被指向了 `Person` 的 `prototype`。于是我们的 `me` 就可以顺着原型链调用 `sayHello` 了。当时调用 `sayHello` 的是 `me`，所以普通函数内的 `this` 就指向了 `me`，顺理成章地拿到了 `me.name` 属性，最后成功输出。
+
+`me` --`__proto__`--> `Person.prototype` --`__proto__`--> `Object.prototype` --`__proto__`--> `null`
+
+## 终于可以引出 Class 了
+
+在有 Class 之前，据说程序员就是像上面那样手动操作 Prototype 的。后来，Class 语法糖终于出现了，让整个过程看起来更像其他的现代编程语言。
+
+尽管长得高大上，但 **Class 的底层依然是原型链**。
+
+刚才的写法摇身一变：
+
+```ts
+class Person {
+    constructor(name) {
+        this.name = name;
+    }
+    sayHello() {
+        console.log("Hi, I'm " + this.name);
+    }
+}
+
+const me = new Person("jack");
+me.sayHello();
+
+console.log(typeof Person); // "function" class 居然只是一个特殊点的函数而已
+```
+
+## 写在最后
+
+弄懂了这些，现在我感觉通透多了，这玩意居然挺简单，原本我还犹豫要不要写下这篇总结。
+
+在这之前，我根本不认识那些五花八门的类型，比如 `MouseEvent` 啥的，都是补全给我啥我就按啥。现在看来，这些类型不过就是为代码服务的，能帮助我们及时发现错误——前提是我们不那么依赖 `as` 断言。
+
+如果想靠谱地校验类型，更好的办法是通过 `instanceof`。
+顺带一提，`instanceof` 的底层原理，其实就是顺着刚刚讲的 `__proto__` 原型链一路向上找！
