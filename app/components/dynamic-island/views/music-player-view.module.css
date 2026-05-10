@@ -1,0 +1,14 @@
+@keyframes musicBar {
+  0%,
+  100% {
+    height: var(--island-bar-height);
+  }
+
+  50% {
+    height: var(--island-bar-peak);
+  }
+}
+
+.musicBarPlaying {
+  animation: musicBar 0.7s ease-in-out var(--island-bar-delay) infinite;
+}

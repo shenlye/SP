@@ -41,13 +41,18 @@ export function ThemeToggle({
   return (
     <Button
       wrapperClassName="inline-flex shrink-0"
-      className={clsx(
-        config.buttonClassName,
-        className,
-      )}
+      className={clsx(config.buttonClassName, className)}
       baseClassName={config.baseClassName}
       aria-label="切换深浅色模式"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={() => {
+        const nextTheme = isDark ? "light" : "dark";
+        setTheme(nextTheme);
+        window.dispatchEvent(
+          new CustomEvent("island:theme-change", {
+            detail: { theme: nextTheme },
+          }),
+        );
+      }}
     >
       <Icon
         icon={isDark ? "solar:sun-bold" : "solar:moon-stars-bold"}
