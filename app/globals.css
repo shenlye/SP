@@ -10,6 +10,9 @@
   --ui-brand: #4f7cff;
   --ui-brand-soft: #dbe7ff;
   --ui-brand-strong: #2a56d4;
+  --ui-alert-success: #22c55e;
+  --ui-alert-warning: #eab308;
+  --ui-alert-danger: #ef4444;
   color-scheme: light;
 }
 
