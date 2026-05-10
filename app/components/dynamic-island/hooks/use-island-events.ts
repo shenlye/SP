@@ -94,20 +94,31 @@ export function useIslandEvents({
       onShowEvent(createThemeChangeEvent(detail?.theme));
     }
 
+    function handleIslandHighlight(event: Event) {
+      const detail = (
+        event as CustomEvent<{ title: string; description?: string; icon?: string }>
+      ).detail;
+
+      onShowEvent({
+        mode: "notice",
+        intent: "welcome",
+        title: detail.title,
+        description: detail.description,
+        icon: detail.icon ?? "solar:info-circle-bold",
+        duration: 1500,
+      });
+    }
+
     document.addEventListener("copy", handleDocumentCopy);
     window.addEventListener("island:copy-success", handleIslandCopySuccess);
     window.addEventListener("island:theme-change", handleIslandThemeChange);
+    window.addEventListener("island:highlight", handleIslandHighlight);
 
     return () => {
       document.removeEventListener("copy", handleDocumentCopy);
-      window.removeEventListener(
-        "island:copy-success",
-        handleIslandCopySuccess,
-      );
-      window.removeEventListener(
-        "island:theme-change",
-        handleIslandThemeChange,
-      );
+      window.removeEventListener("island:copy-success", handleIslandCopySuccess);
+      window.removeEventListener("island:theme-change", handleIslandThemeChange);
+      window.removeEventListener("island:highlight", handleIslandHighlight);
     };
   }, [onShowEvent]);
 }

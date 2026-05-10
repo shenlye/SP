@@ -12,7 +12,7 @@ import type { IslandViewState } from "./types";
 
 function getShellClassName(viewState: IslandViewState) {
   if (viewState.mode === "event") {
-    return "h-12 w-56 rounded-full items-center";
+    return "h-12 w-48 rounded-full items-center";
   }
 
   return viewState.isExpanded
@@ -72,11 +72,18 @@ export function DynamicIsland({ className }: { className?: string }) {
             : 1,
       }}
       transition={{
-        scaleX: {
-          duration: 0.7,
-          times: [0, 0.45, 0.75, 1],
-          ease: "easeOut",
-        },
+        scaleX:
+          viewState.mode === "music" && !viewState.isExpanded
+            ? {
+                duration: 0.7,
+                times: [0, 0.45, 0.75, 1],
+                ease: "easeOut",
+              }
+            : {
+                type: "spring",
+                stiffness: 420,
+                damping: 34,
+              },
         layout: {
           type: "spring",
           stiffness: 420,

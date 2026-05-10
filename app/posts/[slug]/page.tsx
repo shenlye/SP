@@ -43,7 +43,7 @@ export default async function PostPage({ params }: PostPageProps) {
   const { default: Post } = await import(`@/content/posts/${slug}.mdx`);
   const postMeta = (
     <div className="flex flex-wrap items-center gap-2 text-[10px] text-muted sm:text-[11px]">
-      <span className="px-2 py-0.5 text-foreground">
+      <span className="px-2 py-0.5 text-brand">
         {post.category}
       </span>
       <time dateTime={post.publishedAt} className="px-1 py-0.5">
@@ -59,53 +59,33 @@ export default async function PostPage({ params }: PostPageProps) {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      {post.cover ? (
-        <div className="mx-auto w-full max-w-5xl sm:px-8 sm:pt-8">
-          <header className="mx-auto w-full max-w-3xl">
-            <div className="relative overflow-hidden border border-border bg-surface">
-              <div className="relative aspect-16/10 max-h-84 w-full sm:aspect-video sm:max-h-96">
+      <div className="mx-auto w-full max-w-5xl px-6 pt-6 sm:px-8 sm:pt-8">
+        <header className="mx-auto max-w-3xl border-b border-border pb-8">
+          {postMeta}
+          <h1 className="mt-4 text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl">
+            {post.title}
+          </h1>
+
+          {post.cover ? (
+            <div className="mt-7 border border-border bg-surface p-2">
+              <div className="relative aspect-video max-h-92 w-full overflow-hidden bg-background/40">
                 <Image
                   src={post.cover}
                   alt=""
                   fill
                   priority
-                  sizes="(min-width: 1024px) 48rem, 100vw"
+                  unoptimized
+                  sizes="(min-width: 1024px) 48rem, calc(100vw - 3rem)"
                   className="object-cover"
                 />
-
-                <div className="absolute inset-0 bg-linear-to-t from-black/68 via-black/18 to-transparent" />
-
-                <div className="absolute inset-x-0 top-0 p-3">
-                  <div className="[&_span]:text-white [&_time]:text-white/88 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]">
-                    {postMeta}
-                  </div>
-                </div>
-
-                <div className="absolute inset-x-0 bottom-0 py-2 px-4">
-                  <h1
-                    className="max-w-2xl text-3xl font-semibold leading-tight tracking-[-0.05em] text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.55)] sm:text-4xl md:text-5xl"
-                  >
-                    {post.title}
-                  </h1>
-                </div>
               </div>
             </div>
-
-          </header>
-        </div>
-      ) : (
-        <div className="mx-auto w-full max-w-5xl px-6 pt-6 sm:px-8 sm:pt-8">
-          <header className="mx-auto max-w-3xl border-b border-border pb-7">
-            {postMeta}
-            <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-[-0.05em] sm:text-4xl md:text-5xl">
-              {post.title}
-            </h1>
-          </header>
-        </div>
-      )}
+          ) : null}
+        </header>
+      </div>
 
       <article className="mx-auto w-full max-w-5xl px-6 pb-12 pt-8 sm:px-8 sm:pb-16 sm:pt-9">
-        <div className="mx-auto w-full max-w-3xl">
+        <div className="mx-auto w-full max-w-185">
           <Post />
         </div>
       </article>

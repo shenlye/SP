@@ -10,11 +10,18 @@ import { DynamicIsland } from "./dynamic-island/center";
 import { useCloseOnEscape, useHeaderVisibility } from "./site-header-hooks";
 import { DesktopNav, MobileNav } from "./site-header-nav";
 import { ThemeToggle } from "./theme-toggle";
+import { useIslandHover } from "@/app/components/dynamic-island/hooks/use-island-hover";
 
 function BrandLink({ onClick }: { onClick?: () => void }) {
+    const hoverProps = useIslandHover({
+      title: "指我干嘛",
+      description: "这里可没有交互",
+    });
+
   return (
     <Link
       href="/"
+      {...hoverProps}
       onClick={onClick}
       className="group inline-flex min-w-0 items-center gap-3"
     >
