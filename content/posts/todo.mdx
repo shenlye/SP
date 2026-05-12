@@ -43,3 +43,14 @@ export const metadata = {
 <Alert variant="danger">
   这是一个错误提示框，适用于展示操作失败或消极的信息。
 </Alert>
+
+## Mermaid 组件
+
+<Mermaid chart={`
+graph TD
+    A[Start] --> B(Decision)
+    B -- Yes --> C[Process]
+    B -- No --> D[Alternative Process]
+    C --> E[End]
+    D --> E
+`} />

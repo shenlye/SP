@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
 import type { MDXComponents } from "mdx/types";
 import { Alert } from "@/app/components/mdx/alert";
+import { Mermaid } from "@/app/components/mdx/mermaid";
 
 function MdxLink({
   className,
@@ -34,6 +35,7 @@ function MdxLink({
 }
 
 const components: MDXComponents = {
+  Mermaid,
   Alert,
   h1: ({ className, ...props }) => (
     <h1
