@@ -3,7 +3,7 @@ export const metadata = {
   description:
     "深入浅出地解析 JavaScript 原型链的底层机制。通过对比 HTML 元素继承链、手动实现构造函数以及 Class 语法糖，带你彻底弄懂 prototype、__proto__ 与 this 的指向逻辑。",
   publishedAt: "2026-05-08",
-  updatedAt: "2026-05-08",
+  updatedAt: "2026-05-12",
   category: "Frontend Development",
   tags: ["JavaScript", "TypeScript", "ES6", "OOP"],
   cover: "",
@@ -22,6 +22,18 @@ export const metadata = {
 
 如果在 MDN 里查阅 `HTMLDivElement`，你会看到这样一条继承链路：
 `EventTarget` -> `Node` -> `Element` -> `HTMLElement` -> `HTMLDivElement`
+
+<Mermaid chart={`
+graph TD
+    div["const div = document.querySelector('div')"]
+    div --> HTMLDivElement["HTMLDivElement.prototype"]
+    HTMLDivElement --> HTMLElement["HTMLElement.prototype"]
+    HTMLElement --> Element["Element.prototype"]
+    Element --> Node["Node.prototype<br/>appendChild()"]
+    Node --> EventTarget["EventTarget.prototype"]
+    EventTarget --> Object["Object.prototype"]
+    Object --> Null["null"]
+`} />
 
 而 `EventTarget` 的源头又来自 `Object`。这就是一个链条，代表着父类和子类的继承关系。每一层都能调用它前面父类所拥有的方法，但父类无法调用子类新增的方法（这就好比正方形都是矩形，但不是所有矩形都是正方形）。
 
