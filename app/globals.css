@@ -60,6 +60,7 @@ body {
   pre {
     overflow-x: auto;
     padding: 1rem 1.25rem;
+    font-size: 0.78rem;
     background-color: var(--shiki-light-bg);
   }
 
@@ -73,6 +74,14 @@ body {
     &,
     span {
       color: var(--shiki-light) !important;
+    }
+  }
+}
+
+@media (min-width: 640px) {
+  [data-rehype-pretty-code-figure] {
+    pre {
+      font-size: 0.875rem;
     }
   }
 }
