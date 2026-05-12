@@ -1,0 +1,125 @@
+export const metadata = {
+  title: "竞态条件和闭包",
+  description: "从 Mermaid 组件里的异步渲染问题出发，记录竞态条件、useEffect 清理函数和闭包之间的关系。",
+  publishedAt: "2026-05-12",
+  updatedAt: "2026-05-12",
+  category: "Frontend Development",
+  tags: [],
+  cover: "",
+};
+
+在写 Mermaid 渲染组件时，在 `useEffect` 里有一个异步函数。AI 提醒我这里可能会有**竞态条件**，虽然因为速度很快，并不会出现什么明显的问题，但我还是想了解一下这个概念。
+
+## 竞态条件
+
+我专门去测试了一下：如果一个组件因为重新渲染而没防止竞态条件，第二次 Effect 里的异步任务先完成，第一次 Effect 里的异步任务后完成，**旧结果反而会覆盖新结果**，导致页面显示错误。
+
+```tsx
+// 第一次渲染的 Effect
+const task_A = async () => {
+  console.log("发出 A 请求");
+  await delay(3000); // 模拟慢速请求
+  display("结果: A");
+};
+
+// 修改了 state 导致组件重新渲染，触发第二次渲染的 Effect
+// 第二次渲染的 Effect
+const task_B = async () => {
+  console.log("发出 B 请求");
+  await delay(1000); // 模拟快速请求
+  display("结果: B");
+};
+
+// 第二次渲染先完成，但是第一次渲染完成会覆盖掉第二次渲染的结果，最终显示错误的结果
+```
+
+我们可以在 `useEffect` 里使用一个标志位来防止竞态条件：
+
+```tsx
+useEffect(
+  () => {
+    let cancelled = false; // 定义一个标志位
+
+    const task_A = async () => {
+      console.log("发出 A 请求");
+      await delay(3000); // 模拟请求
+
+      if (!cancelled) {
+        // 检查标志位
+        display("结果: A");
+      }
+    };
+
+    return () => {
+      cancelled = true; // 清理函数会在下一次 Effect 执行前/依赖变化/组件卸载时调用
+    };
+  },
+  [
+    /* 依赖项 */
+  ],
+);
+```
+
+顺便用到了这次的主角 Mermaid 组件：
+
+<Mermaid chart={`
+sequenceDiagram
+    autonumber
+    participant React as React (Component)
+    participant EffectA as Effect (A)
+    participant EffectB as Effect (B)
+
+    Note over React: 用户触发 A 请求
+    React->>EffectA: 启动 Effect (cancelled=false)
+    Note over EffectA: 执行异步 task_A (耗时 3s)
+
+    Note over React: 用户快速触发 B 请求 (A 尚未完成)
+    React->>EffectA: 先执行清理函数: set cancelled_A = true
+    React->>EffectB: 启动新 Effect (cancelled=false)
+
+    Note over EffectB: 执行异步 task_B (耗时 0.5s)
+    EffectB->>React: task_B 完成, 检查 !cancelled (true)
+    Note right of React: 页面渲染结果 B
+
+    Note over EffectA: 3s 延迟结束, task_A 准备返回
+    EffectA->>React: task_A 尝试更新 UI
+    Note over EffectA: 检查 !cancelled 为 false
+    Note right of EffectA: 拦截更新: A 已过期，保持静默
+
+`} />
+
+但是标志位只是**忽略了结果**，实际上请求还是被完整执行了。
+
+如果要直接中断，可以使用 [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController)，这样可以节省性能。不过它只能中断 `fetch` 请求，不能中断任意的异步任务，所以在我的场景下，还是需要用标志位来防止竞态条件。
+
+## 闭包
+
+先讲讲**闭包**。
+
+在大多数编程语言中，函数执行完后，内部的局部变量就会被销毁。但在 JavaScript 中，因为返回的内部函数引用了外部变量，所以外部变量不会被销毁，而且只有这个内部函数能访问它，从而实现数据私有化和持久化。
+
+```js
+// 闭包的三个条件
+function createCounter() {
+  let count = 0; // 外部函数的变量
+  return function () {
+    // 内部函数（闭包）
+    count++; // 引用了外部变量
+    console.log(count);
+  };
+}
+const counter = createCounter();
+counter(); // 输出 1
+counter(); // 输出 2
+
+const counter2 = createCounter(); // 创建新闭包
+counter2(); // 输出 1，说明闭包之间是独立的
+```
+
+这也是我们把 `cancelled` 放到 `useEffect` 中，每一份 Effect 都是独立的原因。
+
+因为 `cancelled` 是定义在每次 Effect 执行内部的局部变量，所以每次 Effect 都会形成自己的闭包。清理函数改的是上一轮 Effect 里的那个 `cancelled`，不会影响新一轮 Effect。
+
+## 写到最后
+
+即便知道为什么要执行清理函数，原子性一致性之类的，我还是好奇源码是怎样运作的，但以我目前的水平还不是很有动力去看。
